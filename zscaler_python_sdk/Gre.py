@@ -15,3 +15,6 @@ class Gre(object):
 			self._set_header(self.jsessionid)
 		)
 		return res
+
+
+LOGGER = logging.getLogger(__name__)

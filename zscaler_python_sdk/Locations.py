@@ -11,7 +11,7 @@ class Locations(object):
 
 		data = json.loads(json_response)
 		if self.debug:
-			logging.debug("Extract Location ID: {}".format(data['id']))
+			LOGGER.debug("Extract Location ID: {}".format(data['id']))
 		return data['id']
 
 
@@ -135,3 +135,6 @@ class Locations(object):
 			self._set_header(self.jsessionid)
 		)
 		return res
+
+
+LOGGER = logging.getLogger(__name__)

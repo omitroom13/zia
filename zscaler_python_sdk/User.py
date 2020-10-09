@@ -36,3 +36,6 @@ class User(object):
 	def delete_user_by_id(self, user):
 		pass	
     
+
+
+LOGGER = logging.getLogger(__name__)

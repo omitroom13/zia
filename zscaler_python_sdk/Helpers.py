@@ -23,3 +23,6 @@ class Helpers(object):
 
             results = extract(obj, arr, key)
             return results
+
+
+LOGGER = logging.getLogger(__name__)

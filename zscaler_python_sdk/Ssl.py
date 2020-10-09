@@ -23,3 +23,5 @@ class Ssl(object):
 	def upload_cert_chain(self):
 		pass	
     
+
+LOGGER = logging.getLogger(__name__)

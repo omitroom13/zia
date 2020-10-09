@@ -12,7 +12,7 @@ class VpnCredentials(object):
 		
 		psk = ''.join(random.choices(string.ascii_letters + string.digits, k=MAX_PSK_LEN))
 		if self.debug:
-			logging.debug("RANDOM PSK: {} (PSK Length: {})".format(
+			LOGGER.debug("RANDOM PSK: {} (PSK Length: {})".format(
 				psk,
 				len(psk)
 			))
@@ -23,7 +23,7 @@ class VpnCredentials(object):
 
 		data = json.loads(json_response)
 		if self.debug:
-			logging.debug("Extract VPN ID: {}".format(data['id']))
+			LOGGER.debug("Extract VPN ID: {}".format(data['id']))
 		return data['id']
 
 
@@ -44,11 +44,11 @@ class VpnCredentials(object):
 
 		if not fqdn:
 			if self.debug:
-				logging.error("ERROR: {}".format("No FQDN Provided"))
+				LOGGER.error("ERROR: {}".format("No FQDN Provided"))
 			return 'No FQDN Provided'
 
 		if psk and self.debug:
-			logging.debug("PREDEFINED PSK: {}".format(psk))
+			LOGGER.debug("PREDEFINED PSK: {}".format(psk))
 		elif not psk:
 			psk = self._randomize_psk()
 
@@ -84,11 +84,11 @@ class VpnCredentials(object):
 
 		if not fqdn:
 			if self.debug:
-				logging.error("ERROR: {}".format("No FQDN Provided"))
+				LOGGER.error("ERROR: {}".format("No FQDN Provided"))
 			return 'No FQDN Provided'
 
 		if psk and self.debug:
-			logging.debug("PREDEFINED PSK: {}".format(psk))
+			LOGGER.debug("PREDEFINED PSK: {}".format(psk))
 		elif not psk:
 			psk = self._randomize_psk()
 
@@ -116,3 +116,6 @@ class VpnCredentials(object):
 			self._set_header(self.jsessionid)
 		)
 		return res
+
+
+LOGGER = logging.getLogger(__name__)

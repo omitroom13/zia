@@ -58,3 +58,6 @@ class Security(object):
 	def remove_blacklist_urls(self):
 		pass	
       
+
+
+LOGGER = logging.getLogger(__name__)

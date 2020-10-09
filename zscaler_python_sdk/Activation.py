@@ -26,3 +26,4 @@ class Activation(object):
 		)
 		return res
         
+LOGGER = logging.getLogger(__name__)

@@ -9,7 +9,7 @@ class Sandbox(object):
 
 		uri = self.api_url + 'api/v1/sandbox/report/' + str(md5hash)
 
-		if report_type is 'FULL':
+		if report_type == 'FULL':
 			uri += '?details=full'
 		else:
 			uri += '?details=summary'
@@ -21,7 +21,7 @@ class Sandbox(object):
 
 		if 'Retry-After' in res.json():
 			if self.debug:
-				logging.error("Zscaler RATE LIMIT REACHED")
+				LOGGER.error("Zscaler RATE LIMIT REACHED")
 			return None
 		else:
 			return res.json()
@@ -63,3 +63,6 @@ class Sandbox(object):
 			return True
 		else:
 			return False
+
+
+LOGGER = logging.getLogger(__name__)
