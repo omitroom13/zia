@@ -16,7 +16,6 @@ import platform
 import logging
 import time
 
-
 __version_tuple__ = (0, 0, 5)
 __version__ = '.'.join(map(str, __version_tuple__))
 __email__ = 'NO EMAIL'
@@ -35,11 +34,8 @@ logging.basicConfig(
 
 
 class zscaler(Activation, Auth, Datacenters, Gre, Helpers, Locations, Sandbox, Session, Security, Ssl, User, VpnCredentials):
-
     def __init__(self):
-
         self.session = requests.Session()
-
         self.user_agent = 'ZscalerSDK/%s Python/%s %s/%s' % (
             __version__,
             platform.python_version(),

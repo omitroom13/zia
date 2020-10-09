@@ -8,7 +8,6 @@ from .Defaults import *
 
 
 class Session(object):
-
     def _set_header(self, cookie=None):
         header = {
             'Content-Type': 'application/json',
@@ -17,16 +16,12 @@ class Session(object):
         }
         if cookie:
             header['cookie'] = cookie
-        if self.debug:
-            LOGGER.debug("HTTP Header: {}".format(header))
+        LOGGER.debug("HTTP Header: {}".format(header))
         return header
-
     def _parse_jsessionid(self, cookie):
         jsessionid = re.sub(r';.*$', "", cookie)
-        if self.debug:
-            LOGGER.debug("JSESSION ID: {}".format(jsessionid))
+        LOGGER.debug("JSESSION ID: {}".format(jsessionid))
         return jsessionid
-
     def _set_obfuscateApiKey(self, api_key):
         now = str(int(time.time() * 1000))
         n = now[-6:]
@@ -38,14 +33,10 @@ class Session(object):
             key += api_key[int(r[j])+2]
         self.obfuscatedApiKey = key
         self.ts = now
-        if self.debug:
-            LOGGER.debug(
-                "OBFUSCATED APY KEY / Time: {} / {}".format(self.obfuscatedApiKey, self.ts))
-
+        LOGGER.debug(
+            "OBFUSCATED APY KEY / Time: {} / {}".format(self.obfuscatedApiKey, self.ts))
     def _get_jsessionid(self, type):
-
         uri = self.api_url + 'api/v1/authenticatedSession'
-
         if type == 'api':
             body = {
                 'username': self.zia_username,
@@ -53,7 +44,6 @@ class Session(object):
                 'apiKey': self.obfuscatedApiKey,
                 'timestamp': self.ts
             }
-
         if type == 'partner':
             body = {
                 'username': self.partner_username,
@@ -61,10 +51,7 @@ class Session(object):
                 'apiKey': self.obfuscatedApiKey,
                 'timestamp': self.ts
             }
-
-        if self.debug:
-            LOGGER.debug("HTTP BODY: {}".format(body))
-
+        LOGGER.debug("HTTP BODY: {}".format(body))
         res = self._perform_post_request(
             uri,
             body,
@@ -73,122 +60,94 @@ class Session(object):
         self.jsessionid = self._parse_jsessionid(res.headers['Set-Cookie'])
 
     def _handle_response(self, response, content):
-
         status = response.status_code
         if status in (301, 302, 303, 307):
-            if self.debug:
-                LOGGER.debug(
-                    "HTTP RESPONSE (Redirection) - Status Code: {}".format(status))
+            LOGGER.debug(
+                "HTTP RESPONSE (Redirection) - Status Code: {}".format(status))
         elif 200 <= status <= 299:
-            if self.debug:
-                LOGGER.debug(
-                    "HTTP RESPONSE (Success) - Status Code: {}".format(status))
+            LOGGER.debug(
+                "HTTP RESPONSE (Success) - Status Code: {}".format(status))
         elif 401 <= status <= 499:
-            if self.debug:
-                LOGGER.debug(
-                    "HTTP RESPONSE (Client Error) - Status Code: {}".format(status))
+            LOGGER.debug(
+                "HTTP RESPONSE (Client Error) - Status Code: {}".format(status))
         else:
-            if self.debug:
-                LOGGER.debug(
-                    "HTTP RESPONSE (Unknown ) - Status Code: {}".format(status))
+            LOGGER.debug(
+                "HTTP RESPONSE (Unknown ) - Status Code: {}".format(status))
 
     def _perform_get_request(self, uri, header):
-
         res = self.session.get(
             uri,
             headers=header,
             timeout=REQUEST_TIMEOUTS
         )
-
         if res.content:
             parsed = json.loads(res.content)
             json_response = json.dumps(parsed, sort_keys=True, indent=4, separators=(
                 ',', ': ')) if res.content else {}
-
-            if self.debug:
-                LOGGER.debug("GET RESPONSE FROM (URI): {}\nRESPONSE BODY: {}".format(
-                    uri,
-                    json_response)
-                )
-
+            LOGGER.debug("GET RESPONSE FROM (URI): {}\nRESPONSE BODY: {}".format(
+                uri,
+                json_response)
+            )
         self._handle_response(res, res.content.decode('utf-8'))
         return res
-
     def _perform_post_request(self, uri, body, header):
-
         attempt = json.dumps(body, sort_keys=True,
                              indent=4, separators=(',', ': '))
-        if self.debug:
-            LOGGER.debug("ATTEMPTING POST (URI): {}\nPOST BODY: {}".format(
-                uri,
-                attempt)
-            )
+        LOGGER.debug("ATTEMPTING POST (URI): {}\nPOST BODY: {}".format(
+            uri,
+            attempt)
+        )
         res = self.session.post(
             uri,
             json=body,
             headers=header,
             timeout=REQUEST_TIMEOUTS
         )
-
         if res.content:
             parsed = json.loads(res.content)
             json_response = json.dumps(parsed, sort_keys=True, indent=4, separators=(
                 ',', ': ')) if res.content else {}
-
-            if self.debug:
-                LOGGER.debug("POST RESPONSE FROM (URI): {}\nRESPONSE BODY: {}".format(
-                    uri,
-                    json_response)
-                )
-
+            LOGGER.debug("POST RESPONSE FROM (URI): {}\nRESPONSE BODY: {}".format(
+                uri,
+                json_response)
+            )
         self._handle_response(res, res.content.decode('utf-8'))
         return res
-
     def _perform_put_request(self, uri, body, header):
-
         attempt = json.dumps(body, sort_keys=True,
                              indent=4, separators=(',', ': '))
-        if self.debug:
-            LOGGER.debug("ATTEMPTING PUT (URI): {}\nPUT BODY: {}".format(
-                uri,
-                attempt)
-            )
+        LOGGER.debug("ATTEMPTING PUT (URI): {}\nPUT BODY: {}".format(
+            uri,
+            attempt)
+        )
         res = self.session.put(
             uri,
             json=body,
             headers=header,
             timeout=REQUEST_TIMEOUTS
         )
-
         if res.content:
             parsed = json.loads(res.content)
             json_response = json.dumps(parsed, sort_keys=True, indent=4, separators=(
                 ',', ': ')) if res.content else {}
-
-            if self.debug:
-                LOGGER.debug("PUT RESPONSE FROM (URI): {}\nRESPONSE BODY: {}".format(
-                    uri,
-                    json_response)
-                )
+            LOGGER.debug("PUT RESPONSE FROM (URI): {}\nRESPONSE BODY: {}".format(
+                uri,
+                json_response)
+            )
 
         self._handle_response(res, res.content.decode('utf-8'))
         return res
-
     def _perform_delete_request(self, uri, header):
-
         res = self.session.delete(
             uri,
             headers=header,
             timeout=REQUEST_TIMEOUTS
         )
-
         if res.content:
-            if self.debug:
-                LOGGER.debug("DELETE METHOD (URI): {}, HEADERS: {}".format(
-                    uri,
-                    header)
-                )
-
+            LOGGER.debug("DELETE METHOD (URI): {}, HEADERS: {}".format(
+                uri,
+                header)
+            )
         self._handle_response(res, res.content.decode('utf-8'))
         return res
 

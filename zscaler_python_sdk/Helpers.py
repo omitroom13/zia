@@ -3,7 +3,6 @@ from .Defaults import *
 
 
 class Helpers(object):
-
     def extract_values(self, obj, key):
         """Recursively pull values of specified key from nested JSON."""
         arr = []
