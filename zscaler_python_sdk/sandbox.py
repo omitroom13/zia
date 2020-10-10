@@ -1,25 +1,24 @@
 
 import logging
-from .defaults import *
 
+from .defaults import *
+from .helpers import Helpers
 
 class Sandbox(object):
+    def __init__(self, session):
+        self.session = session
     def _do_get_sanbox_report_md5(self, md5hash, report_type):
-        uri = self.api_url + 'api/v1/sandbox/report/' + str(md5hash)
+        method = 'sandbox/report/' + str(md5hash)
         if report_type == 'FULL':
-            uri += '?details=full'
+            method += '?details=full'
         else:
-            uri += '?details=summary'
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        if 'Retry-After' in res.json():
+            method += '?details=summary'
+        res = self._perform_get_request(method)
+        if 'Retry-After' in res:
             LOGGER.error("Zscaler RATE LIMIT REACHED")
             return None
         else:
-            return res.json()
-
+            return res
     def get_sanbox_report_md5(self, md5hash):
         res = self._do_get_sanbox_report_md5(md5hash, 'FULL')
         return res
@@ -27,17 +26,17 @@ class Sandbox(object):
         res = self._do_get_sanbox_report_md5(md5hash, 'SUMMARY')
         return res
     def get_sanbox_report_sha1(self):
-        pass
+        raise RuntimeError('not implemented')
     def get_sanbox_report_sha256(self):
-        pass
+        raise RuntimeError('not implemented')
     def is_md5hash_suspicious(self, report):
-        extrated = (self.extract_values(report, 'Type'))
+        extrated = (Helpers.extract_values(report, 'Type'))
         if 'SUSPICIOUS' in extrated:
             return True
         else:
             return False
     def is_md5hash_malicious(self, report):
-        extrated = (self.extract_values(report, 'Type'))
+        extrated = (Helpers.extract_values(report, 'Type'))
         if 'MALICIOUS' in extrated:
             return True
         else:

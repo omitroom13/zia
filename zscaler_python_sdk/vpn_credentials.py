@@ -6,6 +6,8 @@ from .defaults import *
 
 
 class VpnCredentials(object):
+    def __init__(self, session):
+        self.session = session
     def _randomize_psk(self):
         psk = ''.join(random.choices(
             string.ascii_letters + string.digits, k=MAX_PSK_LEN))
@@ -19,14 +21,10 @@ class VpnCredentials(object):
         LOGGER.debug("Extract VPN ID: {}".format(data['id']))
         return data['id']
     def get_vpn_credentials(self):
-        uri = self.api_url + 'api/v1/vpnCredentials'
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'vpnCredentials'
+        return self._perform_get_request(method)
     def create_vpn_credential(self, fqdn, psk):
-        uri = self.api_url + 'api/v1/vpnCredentials'
+        method = 'vpnCredentials'
         if not fqdn:
             LOGGER.error("ERROR: {}".format("No FQDN Provided"))
             return 'No FQDN Provided'
@@ -40,21 +38,12 @@ class VpnCredentials(object):
             'comments': 'Zscaler SDK',
             'preSharedKey': psk
         }
-        res = self._perform_post_request(
-            uri,
-            body,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        return self._perform_post_request(uri, body)
     def get_vpn_credential_by_id(self, vpn_id):
-        uri = self.api_url + 'api/v1/vpnCredentials/' + str(vpn_id)
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'vpnCredentials/' + str(vpn_id)
+        return self._perform_get_request(method)
     def update_vpn_credential_by_id(self, vpn_id, fqdn, psk):
-        uri = self.api_url + 'api/v1/vpnCredentials/' + str(vpn_id)
+        method = 'vpnCredentials/' + str(vpn_id)
         if not fqdn:
             LOGGER.error("ERROR: {}".format("No FQDN Provided"))
             return 'No FQDN Provided'
@@ -68,20 +57,10 @@ class VpnCredentials(object):
             'comments': 'Zscaler SDK',
             'preSharedKey': psk
         }
-        res = self._perform_put_request(
-            uri,
-            body,
-            self._set_header(self.jsessionid)
-        )
-        return res
-
+        return self._perform_put_request(method, body)
     def delete_vpn_credential_by_id(self, vpn_id):
-        uri = self.api_url + 'api/v1/vpnCredentials/' + vpn_id
-        res = self._perform_delete_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'vpnCredentials/' + vpn_id
+        return self._perform_delete_request(method)
 
 
 LOGGER = logging.getLogger(__name__)

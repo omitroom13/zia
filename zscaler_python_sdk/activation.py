@@ -1,22 +1,15 @@
 import logging
 
 class Activation(object):
+    def __init__(self, session):
+        self.session = session
     def get_status(self):
-        uri = self.api_url + 'api/v1/status'
-        self._set_header(self.jsessionid)
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'status'
+        return self._perform_get_request(method)
     def activate(self):
-        uri = self.api_url + 'api/v1/status/activate'
-        res = self._perform_post_request(
-            uri,
-            "",
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'status/activate'
+        body = {}
+        return self._perform_post_request(method, body)
 
 
 LOGGER = logging.getLogger(__name__)

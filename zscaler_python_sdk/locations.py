@@ -1,24 +1,16 @@
-
 import logging
 import json
+
 from .defaults import *
 
-
 class Locations(object):
-    def extract_location_id(self, json_response):
-        data = json.loads(json_response)
-        LOGGER.debug("Extract Location ID: {}".format(data['id']))
-        return data['id']
+    def __init__(self, session):
+        self.session = session
     def get_locations(self):
-        uri = self.api_url + 'api/v1/locations'
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
-
+        method = 'locations'
+        return self.session._perform_get_request(method)
     def create_location(self, location_name, vpn_cred_id, fqdn, gateway_options=None):
-        uri = self.api_url + 'api/v1/locations'
+        method = 'locations'
         if not vpn_cred_id:
             return 'VPN Credential ID Required'
         if not fqdn:
@@ -35,20 +27,15 @@ class Locations(object):
         }
         if gateway_options:
             body = {**body, **gateway_options}
-        res = self._perform_post_request(
-            uri,
-            body,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        return self.session._perform_post_request(method, body)
     def create_sub_location(self, parent_id, location_name, ip_addresses, gateway_options=None):
-        uri = self.api_url + 'api/v1/locations'
+        method = 'locations'
         if not parent_id:
-            return 'Location Parent ID Required'
+            raise RuntimeError('Location Parent ID Required')
         if not location_name:
-            return 'Location Name Required'
+            raise RuntimeError('Location Name Required')
         if not ip_addresses:
-            return 'IP Addresses Required'
+            raise RuntimeError('IP Addresses Required')
         body = {
             "name": location_name,
             "parentId": parent_id,
@@ -58,41 +45,36 @@ class Locations(object):
         }
         if gateway_options:
             body = {**body, **gateway_options}
-        res = self._perform_post_request(
-            uri,
+        return self.session._perform_post_request(
+            method,
             body,
             self._set_header(self.jsessionid)
         )
-        return res
     def get_locations_lite(self):
-        uri = self.api_url + 'api/v1/locations/lite'
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'locations/lite'
+        res = self.session._perform_get_request(method)
+        return res.json()
     def get_locations_by_id(self, location_id):
         if not location_id:
             return "Location Requried"
-        uri = self.api_url + 'api/v1/locations/lite/' + str(location_id)
-        res = self._perform_get_request(
-            uri,
+        method = 'locations/lite/' + str(location_id)
+        return self.session._perform_get_request(
+            method,
             self._set_header(self.jsessionid)
         )
-        return res
     def update_location_by_id(self, location_id):
-        pass
+        raise RuntimeError('not implemented')
     def delete_location_by_id(self, location_id):
-        pass
+        raise RuntimeError('not implemented')
     def get_vpn_endpoints(self, ipv4_addr):
+        raise RuntimeError('これセッションである必要があるの? エンドポイントがおかしくないか?')
         if not ipv4_addr:
             return 'IPv4 Address Requried'
         uri = 'https://pac.zscalerbeta.net/getVpnEndpoints?srcIp=' + ipv4_addr
-        res = self._perform_get_request(
+        return self.session.sessionget(
             uri,
-            self._set_header(self.jsessionid)
+            headers = self.session.session._set_header(self.session.jsessionid)
         )
-        return res
 
 
 LOGGER = logging.getLogger(__name__)

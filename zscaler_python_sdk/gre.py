@@ -4,13 +4,11 @@ from .defaults import *
 
 
 class Gre(object):
+    def __init__(self, session):
+        self.session = session
     def get_gre_tunnel_details(self):
-        uri = self.api_url + 'api/v1/orgProvisioning/ipGreTunnelInfo'
-        res = self._perform_get_request(
-            uri,
-            self._set_header(self.jsessionid)
-        )
-        return res
+        method = 'orgProvisioning/ipGreTunnelInfo'
+        return self._perform_get_request(method)
 
 
 LOGGER = logging.getLogger(__name__)
