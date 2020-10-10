@@ -4,7 +4,7 @@ This is a Python SDK for Zscaler Internet Access.  This client library is design
 
 This SDK has been developed mainly using Python 3.8.5 on Ubuntu 20.04 LTS (Focal Fossa).
 
-**NOTE:** This repository will experience frequent updates.  To minimize breakage, public method names will not change.  If you run into any defects, please open issues [[HERE.](https://github.com/omitroom13/zscaler-python-sdk/issues)]
+**NOTE:** This repository will experience frequent updates.  To minimize breakage, public method names will not change.  If you run into any defects, please open issues [[HERE.](https://github.com/omitroom13/zia/issues)]
 
 ## Quick Start 
 
@@ -31,8 +31,8 @@ EOF
 3) Clone Repository (OS must have git installed)
 
 ```
-$ git clone https://github.com/omitroom13/zscaler-python-sdk.git
-$ cd zscaler-python-sdk/
+$ git clone https://github.com/omitroom13/zia.git
+$ cd zia/
 ```
 
 4) Install SDK requirements (OS must have python3 installed)
@@ -64,11 +64,11 @@ $ ls examples/
 
 ## Licensing
 
-This work is released under the MIT license, forked from [eparra's zscaler-python-sdk v0.5](https://github.com/eparra/zscaler-python-sdk/). A copy of the license is provided in the [LICENSE](https://github.com/omitroom13/zscaler-python-sdk/blob/master/LICENSE) file.
+This work is released under the MIT license, forked from [eparra's zscaler-python-sdk v0.5](https://github.com/eparra/zscaler-python-sdk/). A copy of the license is provided in the [LICENSE](https://github.com/omitroom13/zia/blob/master/LICENSE) file.
 
 ## Reporting Issues
 
-If you have bugs or other issues specifically pertaining to this library, file them [here](https://github.com/omitroom13/zscaler-python-sdk/issues).
+If you have bugs or other issues specifically pertaining to this library, file them [here](https://github.com/omitroom13/zia/issues).
 
 ## References
 
