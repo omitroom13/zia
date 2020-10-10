@@ -7,10 +7,10 @@ class Locations(object):
     def __init__(self, session):
         self.session = session
     def get_locations(self):
-        method = 'locations'
-        return self.session._perform_get_request(method)
+        path = 'locations'
+        return self.session.get(path)
     def create_location(self, location_name, vpn_cred_id, fqdn, gateway_options=None):
-        method = 'locations'
+        path = 'locations'
         if not vpn_cred_id:
             return 'VPN Credential ID Required'
         if not fqdn:
@@ -27,9 +27,9 @@ class Locations(object):
         }
         if gateway_options:
             body = {**body, **gateway_options}
-        return self.session._perform_post_request(method, body)
+        return self.session.post(path, body)
     def create_sub_location(self, parent_id, location_name, ip_addresses, gateway_options=None):
-        method = 'locations'
+        path = 'locations'
         if not parent_id:
             raise RuntimeError('Location Parent ID Required')
         if not location_name:
@@ -45,16 +45,16 @@ class Locations(object):
         }
         if gateway_options:
             body = {**body, **gateway_options}
-        return self.session._perform_post_request(method,body)
+        return self.session.post(path,body)
     def get_locations_lite(self):
-        method = 'locations/lite'
-        res = self.session._perform_get_request(method)
+        path = 'locations/lite'
+        res = self.session.get(path)
         return res.json()
     def get_locations_by_id(self, location_id):
         if not location_id:
             return "Location Requried"
-        method = 'locations/lite/' + str(location_id)
-        return self.session._perform_get_request(method)
+        path = 'locations/lite/' + str(location_id)
+        return self.session.get(path)
     def update_location_by_id(self, location_id):
         raise RuntimeError('not implemented')
     def delete_location_by_id(self, location_id):

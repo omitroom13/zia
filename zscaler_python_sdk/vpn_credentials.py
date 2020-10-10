@@ -21,10 +21,10 @@ class VpnCredentials(object):
         LOGGER.debug("Extract VPN ID: {}".format(data['id']))
         return data['id']
     def get_vpn_credentials(self):
-        method = 'vpnCredentials'
-        return self._perform_get_request(method)
+        path = 'vpnCredentials'
+        return self.session.get(path)
     def create_vpn_credential(self, fqdn, psk):
-        method = 'vpnCredentials'
+        path = 'vpnCredentials'
         if not fqdn:
             LOGGER.error("ERROR: {}".format("No FQDN Provided"))
             return 'No FQDN Provided'
@@ -38,12 +38,12 @@ class VpnCredentials(object):
             'comments': 'Zscaler SDK',
             'preSharedKey': psk
         }
-        return self._perform_post_request(uri, body)
+        return self.session.post(uri, body)
     def get_vpn_credential_by_id(self, vpn_id):
-        method = 'vpnCredentials/' + str(vpn_id)
-        return self._perform_get_request(method)
+        path = 'vpnCredentials/' + str(vpn_id)
+        return self.session.get(path)
     def update_vpn_credential_by_id(self, vpn_id, fqdn, psk):
-        method = 'vpnCredentials/' + str(vpn_id)
+        path = 'vpnCredentials/' + str(vpn_id)
         if not fqdn:
             LOGGER.error("ERROR: {}".format("No FQDN Provided"))
             return 'No FQDN Provided'
@@ -57,10 +57,10 @@ class VpnCredentials(object):
             'comments': 'Zscaler SDK',
             'preSharedKey': psk
         }
-        return self._perform_put_request(method, body)
+        return self.session.put(path, body)
     def delete_vpn_credential_by_id(self, vpn_id):
-        method = 'vpnCredentials/' + vpn_id
-        return self._perform_delete_request(method)
+        path = 'vpnCredentials/' + vpn_id
+        return self.session.delete(path)
 
 
 LOGGER = logging.getLogger(__name__)

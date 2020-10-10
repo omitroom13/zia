@@ -6,14 +6,14 @@ class Datacenters(object):
     def __init__(self, session):
         self.session = session
     def get_all_vips(self):
-        method = 'vips?include=all'
-        return self.session._perform_get_request(method)
+        path = 'vips?include=all'
+        return self.session.get(path)
     def get_all_public_vips(self):
-        method = 'vips?include=public'
-        return self.session._perform_get_request(method)
+        path = 'vips?include=public'
+        return self.session.get(path)
     def get_all_private_vips(self):
-        method = 'vips?include=private'
-        return self.session._perform_get_request(method)
+        path = 'vips?include=private'
+        return self.session.get(path)
 
 
 LOGGER = logging.getLogger(__name__)

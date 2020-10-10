@@ -8,12 +8,12 @@ class Sandbox(object):
     def __init__(self, session):
         self.session = session
     def _do_get_sanbox_report_md5(self, md5hash, report_type):
-        method = 'sandbox/report/' + str(md5hash)
+        path = 'sandbox/report/' + str(md5hash)
         if report_type == 'FULL':
-            method += '?details=full'
+            path += '?details=full'
         else:
-            method += '?details=summary'
-        res = self._perform_get_request(method)
+            path += '?details=summary'
+        res = self.get(path)
         if 'Retry-After' in res:
             LOGGER.error("Zscaler RATE LIMIT REACHED")
             return None
