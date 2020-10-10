@@ -4,7 +4,7 @@ This is a Python SDK for Zscaler Internet Access.  This client library is design
 
 This SDK has been developed mainly using Python 3.8.5 on Ubuntu 20.04 LTS (Focal Fossa).
 
-**NOTE:** This repository will experience frequent updates.  To minimize breakage, public method names will not change.  If you run into any defects, please open issues [[HERE.](https://github.com/eparra/zscaler-python-sdk/issues)]
+**NOTE:** This repository will experience frequent updates.  To minimize breakage, public method names will not change.  If you run into any defects, please open issues [[HERE.](https://github.com/omitroom13/zscaler-python-sdk/issues)]
 
 ## Quick Start 
 

@@ -12,7 +12,7 @@ log:
   loggers:
     __main__:
       level: DEBUG
-    zscaler_python_sdk:
+    zia:
       level: INFO
     urllib3.connectionpool:
       level: ERROR

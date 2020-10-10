@@ -7,13 +7,13 @@ try:
 except ImportError:
     from distutils.core import setup
 
-from zscaler_python_sdk import __version__
+from zia import __version__
 
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     long_description = readme.read()
 
-setup(name='zscaler_python_sdk',
+setup(name='zia',
       python_requires='>3.8.5',
       version=__version__,
       description='Python Interface to Zscaler API',
@@ -34,7 +34,7 @@ setup(name='zscaler_python_sdk',
       maintainer_email='NO EMAIL',
       url='https://github.com/omitroom13/zscaler-python-sdk/',
       license='MIT',
-      packages=['zscaler_python_sdk'],
+      packages=['zia'],
       install_requires=['requests>=2.24.0'],
       zip_safe=False
 )

@@ -2,13 +2,13 @@
 
 import json
 import time
-import zscaler_python_sdk
+import zia
 
 
 def main():
 
     print("\n\n ##########  STARTING SDK  ##########\n\n")
-    z = zscaler_python_sdk.zscaler()
+    z = zia.zscaler()
     z.get_zia_creds_from_env(True)
     z.set_cloud('zscalerthree')
     z.authenticate_zia_api()
