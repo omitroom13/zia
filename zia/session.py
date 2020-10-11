@@ -62,7 +62,7 @@ class Session(object):
                 y = None
                 with open(filename) as file:
                     y = yaml.safe_load(file)
-                for d in y[name]:
+                for d in y[name].values():
                     c = Cookie(
                         d['version'],
                         d['name'],
@@ -94,9 +94,9 @@ class Session(object):
         except FileNotFoundError:
             pass
         if name not in y:
-            y[name] = []
+            y[name] = {}
         for c in self.session.cookies:
-            y[name].append(c.__dict__)
+            y[name][c.name] = c.__dict__
         with open(filename, 'w') as file:
             yaml.dump(y, file)
     def _set_header(self, cookie=None):
