@@ -26,9 +26,9 @@ class Sandbox(object):
         res = self._do_get_sanbox_report_md5(md5hash, 'SUMMARY')
         return res
     def get_sanbox_report_sha1(self):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_sanbox_report_sha256(self):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def is_md5hash_suspicious(self, report):
         extrated = (Helpers.extract_values(report, 'Type'))
         if 'SUSPICIOUS' in extrated:

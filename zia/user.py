@@ -7,25 +7,25 @@ class User(object):
     def __init__(self, session):
         self.session = session
     def get_departments(self):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_departments_by_id(self, department_id):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_groups(self):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_group_by_id(self, group_id):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_users(self):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_user_by_id(self, user_id):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def create_user(self, user):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def delete_users(self, users):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def update_user(self, user):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def delete_user_by_id(self, user):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
 
 
 LOGGER = logging.getLogger(__name__)

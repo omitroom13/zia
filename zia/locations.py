@@ -56,9 +56,9 @@ class Locations(object):
         path = 'locations/lite/' + str(location_id)
         return self.session.get(path)
     def update_location_by_id(self, location_id):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def delete_location_by_id(self, location_id):
-        raise RuntimeError('not implemented')
+        raise NotImplementedError()
     def get_vpn_endpoints(self, ipv4_addr):
         raise RuntimeError('これセッションである必要があるの? エンドポイントがおかしくないか?')
         if not ipv4_addr:
