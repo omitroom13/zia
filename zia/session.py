@@ -32,6 +32,8 @@ class RequestError(Exception):
         self.code = error['code']
         self.message = error['message']
 
+class SessionTimeoutError(RequestError):
+    pass
 
 class Session(object):
     API_VERSION  = 'api/v1'
@@ -125,8 +127,17 @@ class Session(object):
         return (now, key)
     def authenticate(self):
         path = 'authenticatedSession'
-        if self.session.cookies.get('JSESSIONID'):
-            return self.get(path)
+        try:
+            if self.session.cookies.get('JSESSIONID'):
+                LOGGER.info("cookie authentication")
+                res = self.get(path)
+                # GET /authenticatedSession does not validate session(JSESSIONID cookie), so execute other method
+                self.get_status()
+                LOGGER.info("authenticated")
+                return res
+        except SessionTimeoutError:
+            LOGGER.info("session timedout. trying re-authn")
+        LOGGER.info("password authentication")
         body = {
             'username': self.username,
             'password': self.password,
@@ -140,6 +151,12 @@ class Session(object):
             raise RuntimeError('not authenticated')
         LOGGER.info('authenticated')
         self.save_cookie()
+    def get_status(self):
+        path = 'status'
+        return self.get(path)
+    def activate(self):
+        path = 'status/activate'
+        return self.post(path)
     def request(self, method, path, body=None):
         header = self._set_header()
         uri = "/".join([self.url, self.API_VERSION, path])
@@ -171,6 +188,9 @@ class Session(object):
         if re.search(r'<title>Zscaler Maintenance Page</title>', res.text):
             error = {'code': 'MAINTENANCE', 'message': 'undergoing maintenance'}
             raise RequestError(method, path, body, error)
+        elif res.text == 'SESSION_NOT_VALID':
+            error = {'code': 'SESSION_NOT_VALID', 'message': 'maybe cookie timeout'}
+            raise SessionTimeoutError(method, path, body, error)
         return res.text
     def get(self, path):
         return self.request(self.session.get, path)
