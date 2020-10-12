@@ -22,5 +22,17 @@ def get_config():
         load_config()
     return _CONFIG
 
+class ZiaApiBase(object):
+    def __init__(self, session, output_type='dict'):
+        self._session = session
+        #json or string
+        self._output_type = output_type
+    def _output(self, res):
+        if self._output_type == 'dict':
+            return res
+        #for fire
+        return json.dumps(res, indent=True)
+
+
 LOGGER = logging.getLogger(__name__)
 _CONFIG = None
