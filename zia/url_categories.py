@@ -6,18 +6,10 @@ import sys
 import fire
 
 from .defaults import *
-from . import load_config
+from . import load_config, ZiaApiBase
 from .session import Session, RequestError
 
-class UrlCategories(object):
-    def __init__(self, session, output_type='dict'):
-        self._session = session
-        #json or string
-        self._output_type = output_type
-    def _output(self, res):
-        if self._output_type == 'dict':
-            return res
-        return json.dumps(res, indent=True)
+class UrlCategories(ZiaApiBase):
     def list(self, custom_only=False):
         path = 'urlCategories'
         if custom_only:
@@ -25,8 +17,7 @@ class UrlCategories(object):
         return self._output(self._session.get(path))
     def create(self, category):
         path = 'urlCategories'
-        body = category
-        return self._output(self._session.post(path, body))
+        return self._output(self._session.post(path, category))
     def list_lite(self):
         path = 'urlCategories/lite'
         return self._output(self._session.get(path))
