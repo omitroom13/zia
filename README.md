@@ -1,8 +1,8 @@
-# Zscaler Python SDK 
+# Zscaler CLI
 
-This is a Python SDK for Zscaler Internet Access.  This client library is designed to support the Zscaler Internet Access (ZIA) [API](https://help.zscaler.com/zia/about-api) and [SD-WAN API](https://help.zscaler.com/zia/sd-wan-api-integration) (aka "Partner API").  All API referecnes can be found here [[LINK](https://help.zscaler.com/zia/api)].  **PLEASE READ THE DOCUMENTATION BEFORE CONTACTING ZSCALER**
+This is a Python CLI for Zscaler Internet Access.  This cli (or client library) is designed to support the Zscaler Internet Access (ZIA) [API](https://help.zscaler.com/zia/about-api) and [SD-WAN API](https://help.zscaler.com/zia/sd-wan-api-integration) (aka "Partner API").  All API referecnes can be found here [[LINK](https://help.zscaler.com/zia/api)].  **PLEASE READ THE DOCUMENTATION BEFORE CONTACTING ZSCALER**
 
-This SDK has been developed mainly using Python 3.8.5 on Ubuntu 20.04 LTS (Focal Fossa).
+This CLI has been developed mainly using Python 3.8.5 on Ubuntu 20.04 LTS (Focal Fossa).
 
 **NOTE:** This repository will experience frequent updates.  To minimize breakage, public method names will not change.  If you run into any defects, please open issues [[HERE.](https://github.com/omitroom13/zia/issues)]
 
@@ -28,30 +28,47 @@ partner:
 EOF
 ```
         
-3) Clone Repository (OS must have git installed)
+3) Install package
 
 ```
-$ git clone https://github.com/omitroom13/zia.git
-$ cd zia/
+$ pip install zia
 ```
 
-4) Install SDK requirements (OS must have python3 installed)
+4) Check out examples
 
 ```
-$ pip install -r requirements.txt
-```
-
-5) Install SDK
-
-```
-$ python setup.py install
-```
-
-6) Check out examples
-
-```
-$ ls examples/
+$ zia --help
+$ zia policies --help
+$ zia policies list
 ...
+[
+ {
+  "id": 463593,
+  "accessControl": "READ_WRITE",
+  "name": "URL Filtering Rule-1",
+  "order": 8,
+  "protocols": [
+   "ANY_RULE"
+  ],
+  "urlCategories": [
+   "OTHER_ADULT_MATERIAL",
+   "ADULT_THEMES",
+   "LINGERIE_BIKINI",
+   "NUDITY",
+   "PORNOGRAPHY",
+   "SEXUALITY",
+   "ADULT_SEX_EDUCATION",
+   "K_12_SEX_EDUCATION",
+   "OTHER_DRUGS",
+   "OTHER_ILLEGAL_OR_QUESTIONABLE",
+   "COPYRIGHT_INFRINGEMENT",
+   "COMPUTER_HACKING",
+   "QUESTIONABLE",
+   "PROFANITY",
+   "MATURE_HUMOR",
+   "ANONYMIZER"
+  ],
+
 ```
 
 ## API Support

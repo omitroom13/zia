@@ -2,12 +2,11 @@ import random
 import string
 import json
 import logging
+
 from .defaults import *
+from zia import ZiaApiBase
 
-
-class VpnCredentials(object):
-    def __init__(self, session):
-        self.session = session
+class VpnCredentials(ZiaApiBase):
     def _randomize_psk(self):
         psk = ''.join(random.choices(
             string.ascii_letters + string.digits, k=MAX_PSK_LEN))
@@ -22,7 +21,7 @@ class VpnCredentials(object):
         return data['id']
     def get_vpn_credentials(self):
         path = 'vpnCredentials'
-        return self.session.get(path)
+        return self._output(self._session.get(path))
     def create_vpn_credential(self, fqdn, psk):
         path = 'vpnCredentials'
         if not fqdn:
@@ -38,10 +37,10 @@ class VpnCredentials(object):
             'comments': 'Zscaler SDK',
             'preSharedKey': psk
         }
-        return self.session.post(uri, body)
+        return self._output(self._session.post(uri, body))
     def get_vpn_credential_by_id(self, vpn_id):
         path = 'vpnCredentials/' + str(vpn_id)
-        return self.session.get(path)
+        return self._output(self._session.get(path))
     def update_vpn_credential_by_id(self, vpn_id, fqdn, psk):
         path = 'vpnCredentials/' + str(vpn_id)
         if not fqdn:
@@ -57,10 +56,10 @@ class VpnCredentials(object):
             'comments': 'Zscaler SDK',
             'preSharedKey': psk
         }
-        return self.session.put(path, body)
+        return self._output(self._session.put(path, body))
     def delete_vpn_credential_by_id(self, vpn_id):
         path = 'vpnCredentials/' + vpn_id
-        return self.session.delete(path)
+        return self._output(self._session.delete(path))
 
 
 LOGGER = logging.getLogger(__name__)

@@ -1,12 +1,10 @@
-
 import logging
 
 from .defaults import *
 from .helpers import Helpers
+from zia import ZiaApiBase
 
-class Sandbox(object):
-    def __init__(self, session):
-        self.session = session
+class Sandbox(ZiaApiBase):
     def _do_get_sanbox_report_md5(self, md5hash, report_type):
         path = 'sandbox/report/' + str(md5hash)
         if report_type == 'FULL':

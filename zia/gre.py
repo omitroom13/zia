@@ -1,14 +1,12 @@
-
 import logging
+
 from .defaults import *
+from zia import ZiaApiBase
 
-
-class Gre(object):
-    def __init__(self, session):
-        self.session = session
+class Gre(ZiaApiBase):
     def get_gre_tunnel_details(self):
         path = 'orgProvisioning/ipGreTunnelInfo'
-        return self.get(path)
+        return self._output(self._session.get(path))
 
 
 LOGGER = logging.getLogger(__name__)

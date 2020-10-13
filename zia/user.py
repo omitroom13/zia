@@ -1,11 +1,9 @@
-
 import logging
+
 from .defaults import *
+from zia import ZiaApiBase
 
-
-class User(object):
-    def __init__(self, session):
-        self.session = session
+class User(ZiaApiBase):
     def get_departments(self):
         raise NotImplementedError()
     def get_departments_by_id(self, department_id):

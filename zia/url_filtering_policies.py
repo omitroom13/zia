@@ -1,13 +1,6 @@
-import datetime
 import logging
-import json
-import sys
 
-import fire
-
-from .defaults import *
-from . import load_config, ZiaApiBase
-from .session import Session, RequestError
+from zia import ZiaApiBase
 
 class UrlFilteringPolicies(ZiaApiBase):
     def list(self):
@@ -28,6 +21,11 @@ class UrlFilteringPolicies(ZiaApiBase):
     
 LOGGER = logging.getLogger(__name__)
 if __name__ == '__main__':
+    import fire
+    
+    from zia.defaults import *
+    from zia import load_config, ZiaApiBase
+    from zia.session import Session, RequestError
     try:
         load_config()
         LOGGER.setLevel(logging.DEBUG)

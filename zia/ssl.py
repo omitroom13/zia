@@ -1,10 +1,9 @@
 import logging
 from .defaults import *
 
+from zia import ZiaApiBase
 
-class Ssl(object):
-    def __init__(self, session):
-        self.session = session
+class Ssl(ZiaApiBase):
     def delete_ssl_certchain(self):
         raise NotImplementedError()
     def download_csr(self):

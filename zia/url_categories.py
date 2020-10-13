@@ -5,9 +5,9 @@ import sys
 
 import fire
 
-from .defaults import *
-from . import load_config, ZiaApiBase
-from .session import Session, RequestError
+from zia.defaults import *
+from zia import load_config, ZiaApiBase
+from zia.session import Session, RequestError
 
 class UrlCategories(ZiaApiBase):
     def list(self, custom_only=False):

@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import time
@@ -65,6 +66,11 @@ class Session(object):
                 with open(filename) as file:
                     y = yaml.safe_load(file)
                 for d in y[name].values():
+                    # if d['expires'] is not None:
+                    #     expiredatetime = datetime.datetime.strptime(d['expires'], '%a, %d %b %Y %H:%m:%S GMT')
+                    #     if expiredatetime < datetime.datetime.utcnow():
+                    #         LOGGER.warning('cookie expired : {}'.format(d['name']))
+                    #     continue
                     c = Cookie(
                         d['version'],
                         d['name'],
@@ -83,6 +89,10 @@ class Session(object):
                         d['comment_url'],
                         d['_rest'],
                         d['rfc2109'])
+                    if c.is_expired():
+                        LOGGER.warning('cookie expired : {}'.format(d['name']))
+                        continue
+                    d['expires'] = None
                     self.session.cookies.set_cookie(c)
             except FileNotFoundError:
                 LOGGER.warning('Cannot find cookie file: {}'.format(filename))
@@ -99,6 +109,12 @@ class Session(object):
             y[name] = {}
         for c in self.session.cookies:
             y[name][c.name] = c.__dict__
+            if c.name == 'JSESSIONID' and 'expires' in y[name][c.name]:
+                # override session cookie(d['expires']==None) for cli
+                # expire_datetime = datetime.datetime.utcnow() + datetime.timedelta(seconds=2*60*60)
+                # y[name][c.name]['expires'] = expire_datetime.strftime('%a, %d %b %Y %H:%m:%S GMT')
+                # 2 hours is no basis.
+                y[name][c.name]['expires'] = int(time.time()) + 2*60*60
         with open(filename, 'w') as file:
             yaml.dump(y, file)
     def _set_header(self, cookie=None):
@@ -109,10 +125,6 @@ class Session(object):
         }
         LOGGER.debug("HTTP Header: {}".format(header))
         return header
-    def _parse_jsessionid(self, cookie):
-        jsessionid = re.sub(r';.*$', "", cookie)
-        LOGGER.debug("JSESSION ID: {}".format(jsessionid))
-        return jsessionid
     def _obfuscate_api_key(self, api_key):
         now = str(int(time.time() * 1000))
         n = now[-6:]
