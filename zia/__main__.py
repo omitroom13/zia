@@ -1,7 +1,3 @@
-# from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
-# from .session import Session
-
-# from zia import ZscalerInternetAccess
 import logging
 
 import fire
@@ -14,9 +10,12 @@ def main():
     load_config()
     LOGGER = logging.getLogger(__name__)
     LOGGER.setLevel(logging.DEBUG)
-    z = ZscalerInternetAccess()
-    z.authenticate()
-    fire.Fire(z)
+    try:
+        z = ZscalerInternetAccess()
+        z.authenticate()
+        fire.Fire(z)
+    except RequestError as exc:
+        LOGGER.error(exc)
     return 0
 
 

@@ -3,7 +3,6 @@ import logging
 import json
 
 import isodate
-import fire
 
 from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
 from .session import Session
