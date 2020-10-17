@@ -183,6 +183,9 @@ class Session(object):
             raise RequestError(method.__name__, path, body, error)
         if res_json:
             return res_json
+        if res.text == '[]':
+            # /firewallFilteringRules returns [] as text?
+            return []
         if len(res.text) == 0:
             return None
         if path == 'auditlogEntryReport/download':
