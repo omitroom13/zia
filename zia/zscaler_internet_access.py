@@ -26,7 +26,7 @@ class ZscalerInternetAccess(object):
         self.sandbox = CloudSandboxReport(self._session, 'str')
         self.firewall = Firewall(self._session, 'str')
         self.locations = Locations(self._session, 'str')
-        # self.security = Security(self._session, 'str')
+        self.security = Security(self._session, 'str')
         # self.datacenters = Datacenters(self._session, 'str')
         # self.sandbox = Sandbox(self._session, 'str')
         # self.ssl = Ssl(self._session, 'str')
