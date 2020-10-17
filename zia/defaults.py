@@ -1,4 +1,11 @@
 import json
+import pkgutil
+import os
+import logging
+import logging.config
+
+import fire
+import yaml
 
 global Z_CLOUDS, DEBUG_DEFAULT, MAX_FQDN_LEN, MAX_PSK_LEN, REQUEST_TIMEOUTS
 
@@ -32,14 +39,28 @@ def get_config():
         load_config()
     return _CONFIG
 
+class RequestError(Exception):
+    def __init__(self, method, path, body, error):
+        self.method = method
+        self.path = path
+        self.body = body
+        self.code = error['code']
+        self.message = error['message']
+
+class SessionTimeoutError(RequestError):
+    pass
+
 class ZiaApiBase(object):
     def __init__(self, session, output_type='dict'):
         self._session = session
+        if output_type not in ['str', 'dict']:
+            raise RuntimeError('unknown output_type {}'.format(output_type))
         self._output_type = output_type
-    def _output(self, res):
-        if self._output_type == 'dict':
+    def _output(self, res, _output_type=None):
+        if _output_type == 'dict':
             return res
-        elif self._output_type == 'str':
+        elif _output_type == 'str':
             #for fire
             return json.dumps(res, indent=True, ensure_ascii=False)
-        raise RuntimeError('unknown output_type {}'.format(self._output_type))
+        #_output_type is None
+        return self._output(res, _output_type=self._output_type)

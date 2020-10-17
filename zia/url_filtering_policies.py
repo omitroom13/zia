@@ -1,6 +1,8 @@
 import logging
 
-from zia import ZiaApiBase
+from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
+from .session import Session
+# from zia import ZiaApiBase
 
 class UrlFilteringPolicies(ZiaApiBase):
     def list(self):
@@ -20,19 +22,19 @@ class UrlFilteringPolicies(ZiaApiBase):
         return self._output(self._session.delete(path))
     
 LOGGER = logging.getLogger(__name__)
-if __name__ == '__main__':
-    import fire
+# if __name__ == '__main__':
+#     import fire
     
-    from zia.defaults import *
-    from zia import load_config, ZiaApiBase
-    from zia.session import Session, RequestError
-    try:
-        load_config()
-        LOGGER.setLevel(logging.DEBUG)
-        session = Session()
-        policies = UrlFilteringPolicies(session, 'str')
-        session.authenticate()
-        fire.Fire(policies)
-    except RequestError as exc:
-        fmt = 'method {} path {} code {} message {} body {}'
-        LOGGER.error(fmt.format(exc.method, exc.path, exc.code, exc.message, exc.body))
+#     from zia.defaults import *
+#     from zia import load_config, ZiaApiBase
+#     from zia.session import Session, RequestError
+#     try:
+#         load_config()
+#         LOGGER.setLevel(logging.DEBUG)
+#         session = Session()
+#         policies = UrlFilteringPolicies(session, 'str')
+#         session.authenticate()
+#         fire.Fire(policies)
+#     except RequestError as exc:
+#         fmt = 'method {} path {} code {} message {} body {}'
+#         LOGGER.error(fmt.format(exc.method, exc.path, exc.code, exc.message, exc.body))

@@ -3,11 +3,7 @@ import logging
 import json
 import sys
 
-import fire
-
-from zia.defaults import *
-from zia import load_config, ZiaApiBase
-from zia.session import Session, RequestError
+from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
 
 class UrlCategories(ZiaApiBase):
     def list(self, custom_only=False):
@@ -38,14 +34,3 @@ class UrlCategories(ZiaApiBase):
         return self._output(self._session.post(path, urls))
 
 LOGGER = logging.getLogger(__name__)
-if __name__ == '__main__':
-    try:
-        load_config()
-        LOGGER.setLevel(logging.DEBUG)
-        session = Session()
-        categories = UrlCategories(session, 'str')
-        session.authenticate()
-        fire.Fire(categories)
-    except RequestError as exc:
-        fmt = 'method {} path {} code {} message {} body {}'
-        LOGGER.error(fmt.format(exc.method, exc.path, exc.code, exc.message, exc.body))

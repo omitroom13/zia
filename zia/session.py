@@ -11,8 +11,7 @@ from http.cookiejar import Cookie
 
 import yaml
 
-from .defaults import *
-from . import load_config
+from zia.defaults import *
 
 PROFILE_FILENAME = os.path.join(os.environ['HOME'], '.zscaler', 'profile.yaml')
 PROFILE = 'default'
@@ -24,17 +23,6 @@ URL = 'url'
 USERNAME = 'username'
 PASSWORD = 'password'
 APIKEY = 'apikey'
-
-class RequestError(Exception):
-    def __init__(self, method, path, body, error):
-        self.method = method
-        self.path = path
-        self.body = body
-        self.code = error['code']
-        self.message = error['message']
-
-class SessionTimeoutError(RequestError):
-    pass
 
 class Session(object):
     API_VERSION  = 'api/v1'
@@ -197,7 +185,10 @@ class Session(object):
             return res_json
         if len(res.text) == 0:
             return None
-        if re.search(r'<title>Zscaler Maintenance Page</title>', res.text):
+        if path == 'auditlogEntryReport/download':
+            # csv download. text output is nothing wrong.
+            pass
+        elif re.search(r'<title>Zscaler Maintenance Page</title>', res.text):
             error = {'code': 'MAINTENANCE', 'message': 'undergoing maintenance'}
             raise RequestError(method.__name__, path, body, error)
         elif re.search(r'var contentString = "Something has gone wrong while attempting to display this page.";', res.text):
