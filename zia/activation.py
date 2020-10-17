@@ -5,9 +5,15 @@ from .session import Session
 
 class Activation(ZiaApiBase):
     def get_status(self):
+        """
+        Gets the activation status for a configuration change
+        """
         path = 'status'
         return self._output(self._session.get(path))
     def activate(self):
+        """
+        Activates configuration changes
+        """
         path = 'status/activate'
         body = {}
         return self._output(self._session.post(path, body))
