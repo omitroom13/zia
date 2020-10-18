@@ -1,5 +1,6 @@
+import logging
+
 from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
-from .session import Session
 
 class FilteringRules(ZiaApiBase):
     def list(self):
@@ -138,3 +139,6 @@ class Firewall(ZiaApiBase):
         self.service_groups = NetworkServiceGroups(self._session, _output_type)
         self.services = NetworkServices(self._session, _output_type)
         self.timewindows = TimeWindows(self._session, _output_type)
+
+
+LOGGER = logging.getLogger(__name__)
