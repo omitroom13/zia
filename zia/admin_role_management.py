@@ -1,5 +1,5 @@
-from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
-from .session import Session
+from .defaults import ZiaApiBase
+
 
 class AdminRoleManagement(ZiaApiBase):
     def list_roles(self):
@@ -8,24 +8,28 @@ class AdminRoleManagement(ZiaApiBase):
         """
         path = 'adminRoles/lite'
         return self._output(self._session.get(path))
+
     def list(self):
         """
         Gets a list of admin users
         """
         path = 'adminUsers'
         return self._output(self._session.get(path))
+
     def create(self, admin):
         """
-        Creates an admin or auditor user        
+        Creates an admin or auditor user
         """
         path = 'adminUsers'
         return self._output(self._session.post(path, admin))
+
     def update(self, user_id, admin):
         """
-        Updates an admin or auditor user for the specified ID        
+        Updates an admin or auditor user for the specified ID
         """
         path = 'adminUsers/{}'.format(user_id)
         return self._output(self._session.put(path, admin))
+
     def delete(self, user_id):
         """
         Deletes an admin or auditor user for the specified ID

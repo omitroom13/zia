@@ -1,8 +1,8 @@
 import logging
 
-from .defaults import *
+from .defaults import ZiaApiBase
 from .helpers import Helpers
-from zia import ZiaApiBase
+
 
 class Sandbox(ZiaApiBase):
     def _do_get_sanbox_report_md5(self, md5hash, report_type):
@@ -17,22 +17,28 @@ class Sandbox(ZiaApiBase):
             return None
         else:
             return res
+
     def get_sanbox_report_md5(self, md5hash):
         res = self._do_get_sanbox_report_md5(md5hash, 'FULL')
         return res
+
     def get_sanbox_report_md5_summary(self, md5hash):
         res = self._do_get_sanbox_report_md5(md5hash, 'SUMMARY')
         return res
+
     def get_sanbox_report_sha1(self):
         raise NotImplementedError()
+
     def get_sanbox_report_sha256(self):
         raise NotImplementedError()
+
     def is_md5hash_suspicious(self, report):
         extrated = (Helpers.extract_values(report, 'Type'))
         if 'SUSPICIOUS' in extrated:
             return True
         else:
             return False
+
     def is_md5hash_malicious(self, report):
         extrated = (Helpers.extract_values(report, 'Type'))
         if 'MALICIOUS' in extrated:

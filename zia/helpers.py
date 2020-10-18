@@ -1,5 +1,4 @@
 import logging
-from .defaults import *
 
 
 class Helpers(object):

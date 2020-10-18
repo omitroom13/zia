@@ -1,17 +1,15 @@
-import datetime
 import json
 import logging
 import time
 import os
-import platform
 import re
 import requests
-import sys
 from http.cookiejar import Cookie
 
 import yaml
 
-from zia.defaults import *
+
+from .defaults import load_config, RequestError, SessionTimeoutError
 
 PROFILE_FILENAME = os.path.join(os.environ['HOME'], '.zscaler', 'profile.yaml')
 PROFILE = 'default'
@@ -24,9 +22,12 @@ USERNAME = 'username'
 PASSWORD = 'password'
 APIKEY = 'apikey'
 
+
 class Session(object):
-    API_VERSION  = 'api/v1'
+    API_VERSION = 'api/v1'
     USER_AGENT = 'zia api sdk'
+    REQUEST_TIMEOUTS = (5, 25)
+
     def __init__(self, profile='default'):
         self.profile = profile
         self._profile = None
@@ -36,17 +37,21 @@ class Session(object):
             raise RuntimeError('url {} must not be end with "/".'.format(url))
         self.username = self._profile[USERNAME]
         self.password = self._profile[PASSWORD]
-        (self.timestamp, self.obfuscated_api_key) = self._obfuscate_api_key(self._profile[APIKEY])
+        (self.timestamp, self.obfuscated_api_key) = self._obfuscate_api_key(
+            self._profile[APIKEY])
         self.session = requests.Session()
         self.load_cookie()
+
     def get_profile(self, filename=PROFILE_FILENAME, name=PROFILE, reread=False):
         if self._profile is None or reread:
             try:
                 with open(filename) as file:
                     self._profile = yaml.safe_load(file)[name]
             except FileNotFoundError:
-                raise RuntimeError('Cannot find profile file: {}'.format(filename))
+                raise RuntimeError(
+                    'Cannot find profile file: {}'.format(filename))
         return self._profile
+
     def load_cookie(self, filename=COOKIE_FILENAME, name=PROFILE, reread=False):
         if len(self.session.cookies) == 0 or reread:
             try:
@@ -54,11 +59,6 @@ class Session(object):
                 with open(filename) as file:
                     y = yaml.safe_load(file)
                 for d in y[name].values():
-                    # if d['expires'] is not None:
-                    #     expiredatetime = datetime.datetime.strptime(d['expires'], '%a, %d %b %Y %H:%m:%S GMT')
-                    #     if expiredatetime < datetime.datetime.utcnow():
-                    #         LOGGER.warning('cookie expired : {}'.format(d['name']))
-                    #     continue
                     c = Cookie(
                         d['version'],
                         d['name'],
@@ -85,7 +85,9 @@ class Session(object):
             except FileNotFoundError:
                 LOGGER.warning('Cannot find cookie file: {}'.format(filename))
             except KeyError:
-                LOGGER.warning('Cannot find cookie profile: {}'.format(filename))
+                LOGGER.warning(
+                    'Cannot find cookie profile: {}'.format(filename))
+
     def save_cookie(self, filename=COOKIE_FILENAME, name=PROFILE):
         y = {}
         try:
@@ -105,6 +107,7 @@ class Session(object):
                 y[name][c.name]['expires'] = int(time.time()) + 2*60*60
         with open(filename, 'w') as file:
             yaml.dump(y, file)
+
     def _set_header(self, cookie=None):
         header = {
             'Content-Type': 'application/json',
@@ -113,6 +116,7 @@ class Session(object):
         }
         LOGGER.debug("HTTP Header: {}".format(header))
         return header
+
     def _obfuscate_api_key(self, api_key):
         now = str(int(time.time() * 1000))
         n = now[-6:]
@@ -125,6 +129,7 @@ class Session(object):
         LOGGER.debug(
             "OBFUSCATED APY KEY / Time: ***** / {}".format(now))
         return (now, key)
+
     def authenticate(self):
         path = 'authenticatedSession'
         try:
@@ -151,20 +156,23 @@ class Session(object):
             raise RuntimeError('not authenticated')
         LOGGER.info('authenticated')
         self.save_cookie()
+
     def get_status(self):
         path = 'status'
         return self.get(path)
+
     def activate(self):
         path = 'status/activate'
         return self.post(path)
+
     def request(self, method, path, body=None):
         header = self._set_header()
         uri = "/".join([self.url, self.API_VERSION, path])
-        LOGGER.debug('method {} path {} body {}'.format(method.__name__, path, body))
-        q = None
+        LOGGER.debug('method {} path {} body {}'.format(
+            method.__name__, path, body))
         kwargs = {
-            'headers':header,
-            'timeout':REQUEST_TIMEOUTS
+            'headers': header,
+            'timeout': self.REQUEST_TIMEOUTS
         }
         if body:
             kwargs['json'] = body
@@ -182,8 +190,8 @@ class Session(object):
         if error and 'code' in error:
             raise RequestError(method.__name__, path, body, error)
         if error and re.match(r'Rate Limit', error['message']):
-            #[API Rate Limit Summary | Zscaler](https://help.zscaler.com/zia/api-rate-limit-summary)
-            #hint: ssl settings is very low limit(1/min and 4/hr)
+            # [API Rate Limit Summary | Zscaler](https://help.zscaler.com/zia/api-rate-limit-summary)
+            # hint: ssl settings is very low limit(1/min and 4/hr)
             error['code'] = "REATELIMITEXCEEDED"
             error['message'] += ". Retry After {}".format(error['Retry-After'])
             raise RequestError(method.__name__, path, body, error)
@@ -198,13 +206,15 @@ class Session(object):
             # csv download. text output is nothing wrong.
             pass
         elif re.search(r'<title>Zscaler Maintenance Page</title>', res.text):
-            error = {'code': 'MAINTENANCE', 'message': 'undergoing maintenance'}
+            error = {'code': 'MAINTENANCE',
+                     'message': 'undergoing maintenance'}
             raise RequestError(method.__name__, path, body, error)
         elif re.search(r'var contentString = "Something has gone wrong while attempting to display this page.";', res.text):
             error = {'code': 'ERROR', 'message': 'Something has gone wrong'}
             raise RequestError(method.__name__, path, body, error)
         elif res.text == 'SESSION_NOT_VALID':
-            error = {'code': 'SESSION_NOT_VALID', 'message': 'maybe cookie timeout'}
+            error = {'code': 'SESSION_NOT_VALID',
+                     'message': 'maybe cookie timeout'}
             raise SessionTimeoutError(method.__name__, path, body, error)
         elif re.search(r'Request body is invalid', res.text):
             error = {'code': 'REQUEST_NOT_VALID', 'message': res.text}
@@ -213,12 +223,16 @@ class Session(object):
             LOGGER.warning("text output might be error: {}".format(res.text))
         # it may not be OK strictly becase api dit not return json.
         return res.text
+
     def get(self, path, body=None):
         return self.request(self.session.get, path, body)
+
     def post(self, path, body):
         return self.request(self.session.post, path, body)
+
     def put(self, path, body):
         return self.request(self.session.put, path, body)
+
     def delete(self, path):
         return self.request(self.session.delete, path)
 

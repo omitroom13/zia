@@ -1,19 +1,19 @@
 import logging
-from .defaults import *
+from .defaults import ZiaApiBase
 
 
-class Datacenters(object):
-    def __init__(self, session):
-        self.session = session
+class Datacenters(ZiaApiBase):
     def get_all_vips(self):
         path = 'vips?include=all'
-        return self.session.get(path)
+        return self._session.get(path)
+
     def get_all_public_vips(self):
         path = 'vips?include=public'
-        return self.session.get(path)
+        return self._session.get(path)
+
     def get_all_private_vips(self):
         path = 'vips?include=private'
-        return self.session.get(path)
+        return self._session.get(path)
 
 
 LOGGER = logging.getLogger(__name__)

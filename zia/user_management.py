@@ -1,60 +1,69 @@
 import logging
 
-from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
+from .defaults import ZiaApiBase
+
 
 class Departments(ZiaApiBase):
     def list(self):
         """
         Gets a list of departments
         """
-        path="departments"
+        path = "departments"
         return self._output(self._session.get(path))
+
     def show(self, department_id):
         """
         Gets the department for the specified ID
         """
-        path="departments/{}".format(department_id)
+        path = "departments/{}".format(department_id)
         return self._output(self._session.get(path))
+
 
 class Groups(ZiaApiBase):
     def list(self):
         """
         Gets a list of groups
         """
-        path="groups"
+        path = "groups"
         return self._output(self._session.get(path))
+
     def show(self, group_id):
         """
         Gets the group for the specified ID
         """
-        path="groups/{}".format(group_id)
+        path = "groups/{}".format(group_id)
         return self._output(self._session.get(path))
+
 
 class Users(ZiaApiBase):
     def list(self):
         """
         Gets a list of all users and allows user filtering by name, department, or group
         """
-        path="users"
+        path = "users"
         return self._output(self._session.get(path))
+
     def show(self, user_id):
         """
         Gets the user information for the specified ID
         """
-        path="users/{}".format(user_id)
+        path = "users/{}".format(user_id)
         return self._output(self._session.get(path))
+
     def create(self, user):
         """
         Adds a new user
         """
-        path="users"
+        path = "users"
         return self._output(self._session.post(path, user))
+
     def update(self, user_id, user):
         """
         Updates the user information for the specified ID
         """
-        path="users/{}".format(user_id)
+        path = "users/{}".format(user_id)
         return self._output(self._session.put(path, user))
+
     def delete(self, user_object):
         """
         user_id : Deletes the user for the specified ID
@@ -62,10 +71,10 @@ class Users(ZiaApiBase):
         """
         t = type(user_object)
         if t is int or t is str:
-            path="users/{}".format(user_object)
+            path = "users/{}".format(user_object)
             return self._output(self._session.delete(path))
         elif t is dict:
-            path="users/bulkDelete"
+            path = "users/bulkDelete"
             return self._output(self._session.post(path, user_object))
         raise RuntimeError('unknown user_object type {}'.format(t.__name__))
 

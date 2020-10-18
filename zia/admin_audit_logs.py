@@ -1,11 +1,10 @@
 import datetime
 import logging
-import json
 
 import isodate
 
-from .defaults import load_config, get_config, RequestError, SessionTimeoutError, ZiaApiBase
-from .session import Session
+from .defaults import ZiaApiBase
+
 
 class AdminAuditLogs(ZiaApiBase):
     def get(self, _output_type=None):
@@ -16,6 +15,7 @@ class AdminAuditLogs(ZiaApiBase):
         # status complete
         # download
         return self._output(self._session.get(path), _output_type=_output_type)
+
     def create(self, start, duration, page=0, page_size=0):
         """
         Creates an audit log report for the specified time period and saves it as a CSV file
@@ -32,11 +32,12 @@ class AdminAuditLogs(ZiaApiBase):
             'pageSize': page_size
         }
         return self._output(self._session.post(path, body))
+
     def wait(self, timeout=600):
         """
         Waits for generating report.
         """
-        status = {'status':'not started yet'}
+        status = {'status': 'not started yet'}
         s = datetime.datetime.now()
         while status is not None and status['status'] != 'COMPLETE':
             status = self.get(_output_type='dict')
@@ -44,12 +45,14 @@ class AdminAuditLogs(ZiaApiBase):
             if (e - s).seconds > timeout:
                 raise RuntimeError('timeout')
         return self._output(status)
+
     def cancel(self):
         """
         Cancels the request to create an audit log report
         """
         path = 'auditlogEntryReport'
         return self._output(self._session.delete(path))
+
     def download(self, output):
         """
         Downloads the most recently created audit log report. !!!!!TIMESTAMP IS PDT!!!!!
@@ -61,5 +64,6 @@ class AdminAuditLogs(ZiaApiBase):
         with open(output, 'w') as f:
             f.write(self._session.get(path))
         # return self._output(self._session.get(path))
+
 
 LOGGER = logging.getLogger(__name__)

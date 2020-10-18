@@ -1,7 +1,7 @@
 import logging
 
-from .defaults import *
-from zia import ZiaApiBase
+from .defaults import ZiaApiBase
+
 
 class Gre(ZiaApiBase):
     def get_gre_tunnel_details(self):
