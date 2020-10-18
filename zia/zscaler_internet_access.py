@@ -12,10 +12,11 @@ from .locations import Locations
 from .security import Security
 from .sandbox import Sandbox
 from .ssl_inspection_settings import SslSettings
-from .user import User
+from .user_management import Departments, Groups, Users
 from .traffic_forwarding import VpnCredentials
 from .url_filtering_policies import UrlFilteringPolicies
 from .url_categories import UrlCategories
+from .user_authentication_settings import AuthSettings
 
 class ZscalerInternetAccess(object):
     def __init__(self, profile='default'):
@@ -27,13 +28,15 @@ class ZscalerInternetAccess(object):
         self.firewall = Firewall(self._session, 'str')
         self.locations = Locations(self._session, 'str')
         self.security = Security(self._session, 'str')
-        # self.datacenters = Datacenters(self._session, 'str')
-        # self.sandbox = Sandbox(self._session, 'str')
         self.ssl = SslSettings(self._session, 'str')
-        # self.user = User(self._session, 'str')
-        # self.gre = Gre(self._session, 'str')
+        self.department = Departments(self._session, 'str')
+        self.group = Groups(self._session, 'str')
+        self.user = Users(self._session, 'str')
         self.vpn = VpnCredentials(self._session, 'str')
         self.policies = UrlFilteringPolicies(self._session, 'str')
         self.categories = UrlCategories(self._session, 'str')
+        self.auth_settings = AuthSettings(self._session, 'str')
+        # self.datacenters = Datacenters(self._session, 'str')
+        # self.gre = Gre(self._session, 'str')
     def authenticate(self):
         self._session.authenticate()

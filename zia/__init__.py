@@ -12,9 +12,10 @@ from .locations import Locations
 from .security import Security
 from .sandbox import Sandbox
 from .ssl_inspection_settings import SslSettings
-from .user import User
+from .user_management import Departments, Groups, Users
 from .traffic_forwarding import VpnCredentials
 from .url_filtering_policies import UrlFilteringPolicies
 from .url_categories import UrlCategories
+from .user_authentication_settings import AuthSettings
 
 from .zscaler_internet_access import ZscalerInternetAccess
