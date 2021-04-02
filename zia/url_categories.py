@@ -51,12 +51,11 @@ class UrlCategories(ZiaApiBase):
         path = 'urlCategories/{}'.format(category_id)
         return self._session.delete(path)
 
-    def lookup(self, urls):
+    def lookup(self, *urls):
         """
         Look up the categorization of the given set of URLs, e.g., ['abc.com', 'xyz.com']
         """
         path = 'urlLookup'
         return self._session.post(path, urls)
-
 
 LOGGER = logging.getLogger(__name__)

@@ -8,7 +8,6 @@ from http.cookiejar import Cookie
 
 import yaml
 
-
 from .defaults import load_config, RequestError, SessionTimeoutError, AuthenticationError
 
 PROFILE = 'default'
@@ -18,7 +17,6 @@ URL = 'url'
 USERNAME = 'username'
 PASSWORD = 'password'
 APIKEY = 'apikey'
-
 
 class Session(object):
     API_VERSION = 'api/v1'
@@ -121,10 +119,10 @@ class Session(object):
             self.load_cookie()
         except FileNotFoundError:
             LOGGER.warning(
-                'Cannot find cookie file: {}'.format(filename))
+                'Cannot find cookie file: {}'.format(self.cookie_filename))
         except KeyError:
             LOGGER.warning(
-                'Cannot find cookie profile: {}'.format(filename))
+                'Cannot find cookie profile: {}'.format(self.cookie_filename))
         path = 'authenticatedSession'
         if self.session.cookies.get('JSESSIONID'):
             LOGGER.info("cookie authentication")
